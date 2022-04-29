@@ -53,8 +53,11 @@ ansible-galaxy collection install community-crypto-1.0.0.tar.gz
 | certificate_profile_id | CA Gateway allows configuring multiple certificate profiles against each Certificate Authority. <br/> certificate_profile_id uniquely identifies a certificate profile which you want to use for a particular certificate issuance. <br /> Please refer to CA Gateway documentation to get the right certificate_profile_id for this request |
 | request_type | Request type can be either a 'new' or 'renew' |
 | enrollment_format | Can be either 'X509' or 'PKCS12' |
-| dn | Absolute path and file name where the server's certificate signing request will be stored on the Ansible host machine |
-| cagw_api_specification_path | Absolute path and file name where the server's certificate signing request will be stored on the Ansible host machine |
-| connection_type | Absolute path and file name where the server's certificate signing request will be stored on the Ansible host machine |
-| requester_name | Absolute path and file name where the server's certificate signing request will be stored on the Ansible host machine |
-| requester_email | Absolute path and file name where the server's certificate signing request will be stored on the Ansible host machine |
+| dn | Subject DN for the server certificate to be issued. <br /> Typically the server's hostname is part of the DN |
+| cagw_api_specification_path | Absolute path and file name where the CAGW API specifications YAML file is present. <br /> This file contains information about the CA Gateway's FQDN which you want to connect to amongst other information.  |
+| connection_type | Can be either - 'SM' for Entrust Certificate Authority (private TLS certs) - 'ECS' for Entrust Certificate Services (public TLS certs) |
+| requester_name | For the ECS Certificate Authority only, refer ECS documentation on how ECS uses this information |
+| requester_email | For the ECS Certificate Authority only, refer ECS documentation on how ECS uses this information |
+| requester_phone | For the ECS Certificate Authority only, refer ECS documentation on how ECS uses this information |
+| tracking_info | For the ECS Certificate Authority only, refer ECS documentation on how ECS uses this information |
+| force | Force the rekey operation |
