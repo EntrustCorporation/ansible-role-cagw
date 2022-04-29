@@ -1,0 +1,45 @@
+---
+# vars file for galaxy-edc-roles
+
+working_path: /tmp
+
+# Values used for private key generation
+privatekey_path: '{{ working_path }}/files/server_key.pem'
+
+# Values used for the CSR generation
+csr_path: '{{ working_path }}/files/csr.pem'
+
+dn: /CN=example.com
+
+#Below can be the parameters for subjectAltName
+dNSName: example.com
+
+# Values used when requesting the certificate from CAGW API
+cert_path: '{{ working_path }}/files/server.pem'
+request_type: new
+enrollment_format: X509
+ca_id: ECS
+profile_id: ecs-standard
+remaining_days: 30
+force: false
+
+
+# PEM encoded certificate and key information
+# Remember to replace the contents of these files with your actual client keypair,
+# or change this path to point to another location where they can be found.
+cagw_api_client_cert_path: '{{ working_path }}/files/cert.pem'
+cagw_api_client_cert_key_path: '{{ working_path }}/files/key.pem'
+
+# A path to a local copy of the API specification. If this value is not specified,
+# the spec will be downloaded dynamically, but it speeds things up if you store a
+# local copy, and reduces your network bandwidth costs.
+cagw_api_specification_path: '{{ working_path }}/files/cagw-api.yaml'
+
+# CA can be of type SM or ECS
+connection_type: ECS
+
+# When Connection type is ECS then below arguments are passed to ECS CA
+requester_name: ansible-server
+requester_email: ansible@example.com
+requester_phone: 222-222-2222
+tracking_info: 1234567890

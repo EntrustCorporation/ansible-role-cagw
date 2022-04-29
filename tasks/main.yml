@@ -1,0 +1,34 @@
+---
+# tasks file for galaxy-edc-roles
+
+- name: Verify that the directory we want to use exists on the server.
+  file:
+    path: '{{ working_path }}'
+    state: directory
+
+- name: Create CSR using shell command
+  shell: openssl req -nodes -newkey rsa:2048 -keyout {{ privatekey_path }} -out {{ csr_path }} -subj {{ dn }}
+
+- name: Request a certificate from CAGW
+  community.crypto.cagw_certificate:
+    path: '{{ cert_path }}'
+    csr: '{{ csr_path }}'
+    cagw_api_client_cert_path: '{{ cagw_api_client_cert_path }}'
+    cagw_api_client_cert_key_path: '{{ cagw_api_client_cert_key_path }}'
+    certificate_authority_id: '{{ ca_id }}'
+    certificate_profile_id: '{{ profile_id }}'
+    request_type: '{{ request_type }}'
+    enrollment_format: '{{ enrollment_format }}'
+    p12_protection_password: 'Entrust@2018'
+    dn: '{{ dn }}'
+    cagw_api_specification_path: '{{ cagw_api_specification_path }}'
+    connection_type: '{{ connection_type }}'
+    requester_name: '{{ requester_name }}'
+    requester_email: '{{ requester_email }}'
+    requester_phone: '{{ requester_phone }}'
+    tracking_info: '{{ tracking_info }}'
+    subject_alt_name:
+      dNSName: '{{ dNSName }}'
+    remaining_days: '{{ remaining_days }}'
+    force: '{{ force }}'
+
