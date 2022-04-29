@@ -40,6 +40,16 @@ ansible-galaxy collection install community-crypto-1.0.0.tar.gz
 ```
 
 ## Updating Ansible host trust store to establish mTLS connection with CA Gateway
+CA Gateway REST APIs work on a mutually authenticated TLS tunnel and hence you might require to add the CA Gateway's TLS certificate issuer's public certificate to the Ansible server's trust anchors. The steps are similar to how you would add the trust anchor of any private issuing Certificate Authority. For the ease, sample commands are below. Please be aware that these commands are specific to the OS flavor and version and it is best to refer OS' own documentation for the same.
+
+Before running the below command(s), please create a certificate bundle file in PEM format, typical order of certs is -
+- Issuing CA certificate(s)
+- Root CA certificate
+
+```
+sudo cp /system_path/CA-Cert-Chain.pem /etc/pki/ca-trust/source/anchors/
+sudo update-ca-trust extract
+```
 
 ## Configuring plugin to talk to Entrust Certificate Authority
 
