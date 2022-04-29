@@ -1,0 +1,107 @@
+---
+# tasks file for galaxy-edc-roles
+ 
+# Using openSSL module of Ansible to generate CSR and private key with specified subject DN, key length and algorithm
+# In below command, attribute signifies
+# -keyout: location where generated private key will be saved in local machine
+# -out: location where generated CSR will be saved in local machine
+# -subj: subject DN to be used in CSR
+- name: Create CSR using shell command
+  shell: openssl req -nodes -newkey rsa:2048 -keyout 'server.key' -out 'server_certificate.csr' -subj '/CN=example.com'
+  delegate_to: localhost
+
+# Using CA Gateway Ansible task to request certificate from backen CA using CA Gateway enrollment API
+# In below command, some of the required critical attributes are as below
+# path: location where signed certificate will be saved in local machine
+# csr: location of CSR from previous command
+# cagw_api_client_cert_path: CA Gateway client certificate to talk to CA Gateway
+# cagw_api_client_cert_key_path: CA Gateway client private key to talk to CA Gateway
+# certificate_authority_id: CA ID to be used
+# certificate_profile_id: profile ID to be used
+# Get rest of attributes information from CAGW Ansible TIG
+- name: Request a certificate from CAGW
+  community.crypto.cagw_certificate:
+    path: 'server.crt'
+    csr: 'server_certificate.csr'
+    cagw_api_client_cert_path: '/tmp/cagw_client_cert.pem'
+    cagw_api_client_cert_key_path: '/tmp/cagw_client_key.pem'
+    certificate_authority_id: 'CA-ECS'
+    certificate_profile_id: 'StandardProfile'
+    request_type: 'new'
+    enrollment_format: 'X509'
+    dn: 'example.com'
+    cagw_api_specification_path: '/tmp/cagw-api.yaml'
+    connection_type: 'ECS'
+    requester_name: 'organization'
+    requester_email: 'requestor@org.com'
+    requester_phone: '111-222-3333'
+    tracking_info: '0987654321'
+    remaining_days: '30'
+    force: 'true'
+  delegate_to: localhost
+
+# Using bigip_ssl_certificate task to copy certificate to F5...cert will be visible with name as cagw-f5-cert-demo
+# important arguments -
+# content: will look in this location to copy certificate from
+# provider: F5 LB information like BIG IP VE server IP, username and password
+- name: Copy cert to F5
+  f5networks.f5_modules.bigip_ssl_certificate:
+    name: cagw-f5-cert-demo
+    state: present
+    content: "{{ lookup('file', 'server.crt') }}"
+    provider:
+      password: ChangeIt!
+      server: REPLACE_WITH_BIGIP_FQDN
+      user: BIGIP_USERNAME
+      validate_certs: no
+      server_port: 8443
+  delegate_to: localhost
+ 
+# Using bigip_ssl_key task to copy private key to F5...key will be visible with name as cagw-f5-private-key-demo
+# important arguments -
+# content: will look in this location to copy private key from
+- name: Copy private key to F5
+  f5networks.f5_modules.bigip_ssl_key:
+    name: cagw-f5-private-key-demo
+    state: present
+    content: "{{ lookup('file', 'server.key') }}"
+    provider:
+      password: ChangeIt!
+      server: REPLACE_WITH_BIGIP_FQDN
+      user: BIGIP_USERNAME
+      validate_certs: no
+      server_port: 8443
+  delegate_to: localhost
+ 
+# Using bigip_ssl_certificate task to copy CA certificate bundle to F5...CA certificate bundle will be visible with name as cagw-f5-ca-bundle-demo
+# important arguments -
+# content: will look in this location to copy CA certificate chain bundle from...assuming ca.crt is there in localhost
+- name: Copy CA certificate chain to F5
+  bigip_ssl_certificate:
+    name: cagw-f5-ca-bundle-demo
+    state: present
+    content: "{{ lookup('file', '/tmp/ca.crt') }}"
+    provider:
+      password: ChangeIt!
+      server: REPLACE_WITH_BIGIP_FQDN
+      user: BIGIP_USERNAME
+      validate_certs: no
+      server_port: 8443
+  delegate_to: localhost
+  
+# Using bigip_profile_client_ssl task to create SSL client profile using copied certificate and key
+- name: Create a client SSL profile with a CAGW issued cert/key/chain setting
+  bigip_profile_client_ssl:
+    state: present
+    name: clientssl_cagw-demo
+    cert_key_chain:
+      - cert: cagw-f5-cert-demo
+        key: cagw-f5-private-key-demo
+        chain: cagw-f5-ca-bundle-demo
+    provider:
+      password: ChangeIt!
+      server: REPLACE_WITH_BIGIP_FQDN
+      user: BIGIP_USERNAME
+      validate_certs: no
+      server_port: 8443
+  delegate_to: localhost
