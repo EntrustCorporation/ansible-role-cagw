@@ -1,1 +1,5 @@
-Readme
+Draft Mode:
+
+This repository contains sample playbooks that can be leveraged as-is or with minor modifications/customizations along with Entrust PKI stack, specially CA Gateway and one or more backend Certificate Authorities.
+
+Below section in this README will walk you through the process of setting up the CA Gateway Ansible module and configure it to work with Entrust CA Gateway.
