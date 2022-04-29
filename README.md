@@ -55,7 +55,7 @@ ansible-galaxy collection install community-crypto-1.0.0.tar.gz
 | enrollment_format | Can be either 'X509' or 'PKCS12' |
 | dn | Subject DN for the server certificate to be issued. <br /> Typically the server's hostname is part of the DN |
 | cagw_api_specification_path | Absolute path and file name where the CAGW API specifications YAML file is present. <br /> This file contains information about the CA Gateway's FQDN which you want to connect to amongst other information.  |
-| connection_type | Can be either - 'SM' for Entrust Certificate Authority (private TLS certs) - 'ECS' for Entrust Certificate Services (public TLS certs) |
+| connection_type | Can be either 'SM' for Entrust Certificate Authority (private TLS certs) or 'ECS' for Entrust Certificate Services (public TLS certs) |
 | requester_name | For the ECS Certificate Authority only, refer ECS documentation on how ECS uses this information |
 | requester_email | For the ECS Certificate Authority only, refer ECS documentation on how ECS uses this information |
 | requester_phone | For the ECS Certificate Authority only, refer ECS documentation on how ECS uses this information |
