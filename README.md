@@ -9,8 +9,20 @@ This section will walk you through the process of setting up the CA Gateway Ansi
 *Assuming the host OS is a Centos/RHEL 8 machine*
 
 ## Installing Ansible
+Ansible installation steps may change as per the host Operating System or version of Operating System.
+Below steps are specific to the OS we have validated with. 
+For better guidance refer Ansible's own documentation.
 ```
+# Update Cache
 sudo dnf makecache
+# Install epel release
+sudo dnf install epel-release
+# Update cache again
+sudo dnf makecache
+# Now install Ansible
+sudo dnf install ansible
+# Verify installation and version
+ansible --version
 ```
 
 ## Getting Entrust CA Gateway Ansible plugin
