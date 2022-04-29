@@ -1,0 +1,54 @@
+---
+# tasks file for galaxy-edc-roles
+ 
+- name: Create CSR using shell command
+  shell: openssl req -nodes -newkey rsa:2048 -keyout 'server.key' -out 'server_certificate.csr' -subj '/CN=example.com'
+  delegate_to: localhost
+  
+- name: Request a certificate from CAGW
+  community.crypto.cagw_certificate:
+    path: 'server.crt'
+    csr: 'server_certificate.csr'
+    cagw_api_client_cert_path: '/tmp/cagw_client_cert.pem'
+    cagw_api_client_cert_key_path: '/tmp/cagw_client_key.pem'
+    certificate_authority_id: 'CA-ECS'
+    certificate_profile_id: 'StandardProfile'
+    request_type: 'new'
+    enrollment_format: 'X509'
+    dn: 'example.com'
+    cagw_api_specification_path: '/tmp/cagw-api.yaml'
+    connection_type: 'ECS'
+    requester_name: 'organization'
+    requester_email: 'requestor@org.com'
+    requester_phone: '111-222-3333'
+    tracking_info: '0987654321'
+    remaining_days: '30'
+    force: 'true'
+  delegate_to: localhost
+
+- name: Install the latest version of Apache
+  yum:
+    name:
+      - httpd
+      - mod_ssl
+    state: latest
+
+- name: Update httpd.conf file for apache server
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    line: "ServerName example.com"
+
+- name: Copy certificate file to apache server
+  ansible.builtin.copy:
+    src: 'server.crt'
+    dest: '/etc/pki/tls/certs/localhost.crt'
+
+- name: Copy private key to apache server
+  ansible.builtin.copy:
+    src: 'server.key'
+    dest: '/etc/pki/tls/private/localhost.key'
+
+- name: Start service httpd, if not started
+  ansible.builtin.service:
+    name: httpd
+    state: started
