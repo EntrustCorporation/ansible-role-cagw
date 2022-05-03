@@ -9,6 +9,11 @@ This playbook will allow adding x509 certificate/key pair that can be used to ad
 ![image](https://user-images.githubusercontent.com/98990887/166394855-3f3f151a-b50e-4414-865b-50921b40d195.png)
 
 ## Prerequisites
+You will need: 
+- Ansible installed with Entrust CA Gateway plugin installation
+- Access to Entrust CA Gateway along with one of the supported Certificate Authorities (CA)
+- Client certificate and private key to talk to Entrust CA Gateway
+- Target endpoint server with inventory file for the deployment of Apache Web Server, SSL module and the TLS certificate and key pair
 
 ## Outline of the playbook
 This sample playbook will perform below tasks -
@@ -21,11 +26,13 @@ This sample playbook will perform below tasks -
 
 # Steps
 
-## Step 1
+## Step 1: Creating variables file
 
+## Step 2: Create playbook
 
+## Step 3: Setup and configure endpoint with Apache Webserver
 
-
+## Step 4: Execute playbook
 ### *Note*
 This playbook may require root privileges on the target machine so it is expected to generate public/private key pair for the root user and copy the public key on the Ansible server so that a passwordless SSH can be done by the Ansible server on the target machine.
 Below steps may be used to do the same.
