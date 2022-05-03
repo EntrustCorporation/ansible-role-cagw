@@ -4,7 +4,7 @@ This repository contains sample playbooks that can be leveraged as-is or with mi
 ## Collection Content
 ### Roles
 ```
-- *community.crypto.cagw_certificate*: Enrolls a certificate and optionally deploys it to a remote location.
+- community.crypto.cagw_certificate: Enrolls a certificate and optionally deploys it to a remote location.
 ```
 
 ## Setting up CA Gateway Plugin
