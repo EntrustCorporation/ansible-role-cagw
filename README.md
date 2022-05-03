@@ -2,7 +2,7 @@
 This repository contains sample playbooks that can be leveraged as-is or with minor modifications/customizations along with Entrust PKI stack, specifically CA Gateway and one or more backend Entrust Certificate Authorities.
 
 # Collection Content
-## Roles
+### Roles
 - community.crypto.cagw_certificate: Enrolls a certificate and optionally deploys it to a remote location.
 
 # Setting up CA Gateway Plugin
