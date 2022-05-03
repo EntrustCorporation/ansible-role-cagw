@@ -25,6 +25,9 @@ This sample playbook will perform below tasks -
 - Start the services
 
 # Steps
+### *Note*
+This playbook may require root privileges on the target machine so it is expected to generate public/private key pair for the root user and copy the public key on the Ansible server so that a passwordless SSH can be done by the Ansible server on the target machine.
+Below steps may be used to do the same.
 
 ## Step 1: Copy client CA Gateway credentials
 To be able to connect to Entrust CA Gateway REST APIs, Ansible client would need client certificate and private key.
@@ -72,10 +75,29 @@ force: false
 ```
 
 ## Step 3: Create playbook
-
+```
+- name: Request a certificate from CAGW
+  community.crypto.cagw_certificate:
+    path: '{{ cert_path }}'
+    csr: '{{ csr_path }}'
+    cagw_api_client_cert_path: '{{ cagw_api_client_cert_path }}'
+    cagw_api_client_cert_key_path: '{{ cagw_api_client_cert_key_path }}'
+    certificate_authority_id: '{{ ca_id }}'
+    certificate_profile_id: '{{ profile_id }}'
+    request_type: '{{ request_type }}'
+    enrollment_format: '{{ enrollment_format }}'
+    dn: '{{ dn }}'
+    cagw_api_specification_path: '{{ cagw_api_specification_path }}'
+    connection_type: '{{ connection_type }}'
+    requester_name: '{{ requester_name }}'
+    requester_email: '{{ requester_email }}'
+    requester_phone: '{{ requester_phone }}'
+    tracking_info: '{{ tracking_info }}'
+    subject_alt_name:
+      dNSName: '{{ dNSName }}'
+    remaining_days: '{{ remaining_days }}'
+    force: '{{ force }}'
+```
 ## Step 4: Setup and configure endpoint with Apache Webserver
 
 ## Step 5: Execute playbook
-### *Note*
-This playbook may require root privileges on the target machine so it is expected to generate public/private key pair for the root user and copy the public key on the Ansible server so that a passwordless SSH can be done by the Ansible server on the target machine.
-Below steps may be used to do the same.
