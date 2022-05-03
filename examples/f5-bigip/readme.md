@@ -1,5 +1,2 @@
-# F5 Big IP
-This sample playbook will perform below tasks -
-- Generate server's private key
-- Generate Certificate Signing Request with specified subject DN
-- Send signing request to the CA Gateway with your preferred CA/Profile information
+# Configuring F5 BIG IP Clint SSL profile for SSL offloading with Entrust CA Gateway Ansible Role
+This playbook will allow automating delivering TLS certificate/key pair as well as configuring client SSL profile associated with a Virtual IP within F5 BIG IP platform. The end result will provide TLS/SSL certificates at the F5 Load Balancer and allow SSL offloading for traffic destined to endpoints like Apache and NGINX webservers.
