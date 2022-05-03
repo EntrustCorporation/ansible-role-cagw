@@ -26,13 +26,42 @@ This sample playbook will perform below tasks -
 
 # Steps
 
-## Step 1: Creating variables file
+## Step 1: Copy client CA Gateway credentials
 
-## Step 2: Create playbook
+## Step 2: Creating variables file
+To be able to use the sample playbook provided, the first step is to configure the variables file i.e. ``` ./defaults/main.yml ```. Things you would need to consider are:
+- Entrust CA Gateway client cert and key path
+- CA ID 
+- Certificate Profile ID
 
-## Step 3: Setup and configure endpoint with Apache Webserver
+```
+working_path: /tmp
+privatekey_path: '{{ working_path }}/files/server_key.pem'
+csr_path: '{{ working_path }}/files/csr.pem'
+dn: /CN=example.com
+dNSName: example.com
+cert_path: '{{ working_path }}/files/server.pem'
+request_type: new
+enrollment_format: X509
+ca_id: ECS
+profile_id: ecs-standard
+remaining_days: 30
+force: false
+cagw_api_client_cert_path: '{{ working_path }}/files/cert.pem'
+cagw_api_client_cert_key_path: '{{ working_path }}/files/key.pem'
+cagw_api_specification_path: '{{ working_path }}/files/cagw-api.yaml'
+connection_type: ECS
+requester_name: ansible-server
+requester_email: ansible@example.com
+requester_phone: 222-222-2222
+tracking_info: 1234567890
+```
 
-## Step 4: Execute playbook
+## Step 3: Create playbook
+
+## Step 4: Setup and configure endpoint with Apache Webserver
+
+## Step 5: Execute playbook
 ### *Note*
 This playbook may require root privileges on the target machine so it is expected to generate public/private key pair for the root user and copy the public key on the Ansible server so that a passwordless SSH can be done by the Ansible server on the target machine.
 Below steps may be used to do the same.
