@@ -76,6 +76,9 @@ force: false
 ```
 
 ## Step 3: Create playbook
+Once the variables are defined, you can use the sample playbook as is which is there in ```./tasks/main.yml``` or modified per you need.
+Below is a sample cagw_certificate task that will use a CSR and private key to send a request to Entrust CA Gateway for certificate signing operation.
+For a web server like Apache, you would need to construct your subject DN or define SAN attribute like DNS Name to include the FQDN for the webserver.
 ```
 - name: Request a certificate from CAGW
   community.crypto.cagw_certificate:
@@ -100,6 +103,7 @@ force: false
     force: '{{ force }}'
 ```
 ## Step 4: Setup and configure endpoint with Apache Webserver
+Below tasks are relevant for Apache webserver installation with SSL module as well as configuring the webserver to leverage the private key and the certificate generated in above tasks.
 ```
 - name: Install the latest version of Apache
   yum:
