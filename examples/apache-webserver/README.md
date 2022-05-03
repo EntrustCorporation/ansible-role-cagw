@@ -36,10 +36,11 @@ Copy the REST API cert and key as ```apache_server_private_key.pem``` and ```apa
 
 ## Step 2: Creating variables file
 To be able to use the sample playbook provided, the first step is to configure the variables file i.e. ``` ./defaults/main.yml ```. Things you would need to consider are:
-- Entrust CA Gateway client cert and key path
-- CA ID 
-- Certificate Profile ID
-
+- working_path: Working path is the root directory where all the static files are stored and where you expect generated CSR, cert, and key to be stored 
+- cagw_api_client_cert_path & cagw_api_client_cert_key_path: Entrust CA Gateway client cert and key path
+- ca_id: CA Gateway backend CA ID (refer Entrust CA Gateway guide to know more)
+- profile_id: CA Gateway CA Certificate Profile ID (refer Entrust CA Gateway guide to know more)
+- enrollment_format: X509 or PKCS12 
 ```
 working_path: /tmp
 csr_path: '{{ working_path }}/files/csr.pem'
