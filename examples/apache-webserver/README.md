@@ -27,6 +27,9 @@ This sample playbook will perform below tasks -
 # Steps
 
 ## Step 1: Copy client CA Gateway credentials
+To be able to connect to Entrust CA Gateway REST APIs, Ansible client would need client certificate and private key.
+Follow Entrust CA Gateway's documentation to get the REST API client credentials.
+Copy the REST API cert and key as ```apache_server_private_key.pem``` and ```apache_server_certificate.pem```
 
 ## Step 2: Creating variables file
 To be able to use the sample playbook provided, the first step is to configure the variables file i.e. ``` ./defaults/main.yml ```. Things you would need to consider are:
