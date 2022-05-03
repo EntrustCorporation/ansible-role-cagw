@@ -6,5 +6,5 @@ This directory as of now contains following examples -
 
 | Endpoint | Playbook |
 | --- | --- |
-| <img src = "https://user-images.githubusercontent.com/98990887/166507979-cffabb93-ec75-4c04-839e-3e44af9192c3.png" width=100 /> | [Apache Webserver](../blob/master/LICENSE) |
+| <img src = "https://user-images.githubusercontent.com/98990887/166507979-cffabb93-ec75-4c04-839e-3e44af9192c3.png" width=100 /> | [Apache Webserver](../apache-webserver/README.md) |
 | <img src = "https://user-images.githubusercontent.com/98990887/166508083-fb4d0715-dd83-4fd0-b601-c044ee420ea1.png" width=100 /> | F5 Big IP |
