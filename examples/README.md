@@ -4,5 +4,6 @@ We are working continously to add more and more such playbooks to make your jour
 
 This directory as of now contains following examples -
 
-|Endpoint|Playbook|
-|blah|blah|
+| Endpoint | Playbook |
+| --- | --- |
+| blah | blah |
