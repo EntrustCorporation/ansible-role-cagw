@@ -36,25 +36,36 @@ To be able to use the sample playbook provided, the first step is to configure t
 
 ```
 working_path: /tmp
-privatekey_path: '{{ working_path }}/files/server_key.pem'
 csr_path: '{{ working_path }}/files/csr.pem'
-dn: /CN=example.com
-dNSName: example.com
-cert_path: '{{ working_path }}/files/server.pem'
+privatekey_path: '{{ working_path }}/files/apache_server_private_key.pem'
+cert_path: '{{ working_path }}/files/apache_server_certificate.pem'
 request_type: new
 enrollment_format: X509
+
+# Apache webserver hostname
+dn: /CN=example.com
+dNSName: example.com
+
+# CA and certificate profile ID
 ca_id: ECS
 profile_id: ecs-standard
-remaining_days: 30
-force: false
-cagw_api_client_cert_path: '{{ working_path }}/files/cert.pem'
-cagw_api_client_cert_key_path: '{{ working_path }}/files/key.pem'
+
+cagw_api_client_cert_path: '{{ working_path }}/files/cagw_client_cert.pem'
+cagw_api_client_cert_key_path: '{{ working_path }}/files/cagw_client_key.pem'
 cagw_api_specification_path: '{{ working_path }}/files/cagw-api.yaml'
+
+# Use ECS for public SSL certificates
+# Use SM for private TLS certs issued via Entrust Certificate Authority (ECA)
 connection_type: ECS
+
+# ECS specific client information
 requester_name: ansible-server
 requester_email: ansible@example.com
 requester_phone: 222-222-2222
 tracking_info: 1234567890
+
+remaining_days: 30
+force: false
 ```
 
 ## Step 3: Create playbook
