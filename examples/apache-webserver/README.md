@@ -99,5 +99,35 @@ force: false
     force: '{{ force }}'
 ```
 ## Step 4: Setup and configure endpoint with Apache Webserver
+```
+- name: Install the latest version of Apache
+  yum:
+    name:
+      - httpd
+      - mod_ssl
+    state: latest
 
+- name: Update httpd.conf file for apache server
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    line: "ServerName example.com"
+
+- name: Copy certificate file to apache server
+  ansible.builtin.copy:
+    src: {{ cert_path }}
+    dest: '/etc/pki/tls/certs/localhost.crt'
+
+- name: Copy private key to apache server
+  ansible.builtin.copy:
+    src: {{ privatekey_path }}
+    dest: '/etc/pki/tls/private/localhost.key'
+
+- name: Start service httpd, if not started
+  ansible.builtin.service:
+    name: httpd
+    state: started
+```
 ## Step 5: Execute playbook
+```
+ansible-playbook playbook.yml
+```
