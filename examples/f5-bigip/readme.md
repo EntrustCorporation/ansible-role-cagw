@@ -92,6 +92,7 @@ Below is a sample cagw_certificate task that will use a CSR and private key to s
     force: '{{ force }}'
 ```
 ## Step 4: Copy certs and keys to the F5 BIG IP
+![image](https://user-images.githubusercontent.com/98990887/166520471-51d8dc55-e62d-4d79-9ca2-fd63ad4fb321.png)
 ```
 - name: Copy cert to F5
   f5networks.f5_modules.bigip_ssl_certificate:
@@ -133,6 +134,7 @@ Below is a sample cagw_certificate task that will use a CSR and private key to s
   delegate_to: localhost
 ```
 ## Step 5: Create Client SSL profile with above cert chain and private key
+![image](https://user-images.githubusercontent.com/98990887/166520538-e8e4e89b-5f13-4237-9ccf-38fdc7fb785b.png)
 ```
 - name: Create a client SSL profile with a CAGW issued cert/key/chain setting
   bigip_profile_client_ssl:
