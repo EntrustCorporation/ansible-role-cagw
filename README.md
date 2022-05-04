@@ -33,7 +33,7 @@ ansible --version
 Entrust CA Gateway Ansible module is currently available only via Entrust's own software distribution channel.
 You may reach out to your sales representative from Entrust to get access to the plugin.
 
-We are working to get the module reviewed and eventually being made available via Ansible Galaxy, but meanwhile you can contact Entrust sales to get the module.
+We are working to get the module reviewed and eventually being made available via community crypto module, but meanwhile you can contact Entrust sales to get the module.
 
 ### Installing plugin
 Entrust CA Gateway Ansible module is available as a .tar.gz archive file and can be installed as any standard private module.
