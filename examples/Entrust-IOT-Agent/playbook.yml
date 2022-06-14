@@ -1,35 +1,32 @@
 - name: Create CSR using shell command
-  shell: openssl req -nodes -newkey rsa:2048 -keyout {{ privatekey_path }} -out                                                                              {{ csr_path }} -subj {{ dn }}
+  shell: openssl req -nodes -newkey rsa:2048 -keyout 'birth.key' -out 'birth_cer.csr' -subj '/CN=device'
   delegate_to: 127.0.0.1
 
 - name: Request a certificate from CAGW
   community.crypto.cagw_certificate:
-    path: '{{ cert_path }}'
-    csr: '{{ csr_path }}'
-    cagw_api_client_cert_path: '{{ cagw_api_client_cert_path }}'
-    cagw_api_client_cert_key_path: '{{ cagw_api_client_cert_key_path }}'
+    path: 'birth_cer.crt'
+    csr: 'birth_cer.csr'
+    cagw_api_client_cert_path: '/tmp/cagw_client_cert.pem'
+    cagw_api_client_cert_key_path: '/tmp/cagw_client_key.pem'
     certificate_authority_id: '{{ ca_id }}'
     certificate_profile_id: '{{ profile_id }}'
-    request_type: '{{ request_type }}'
-    enrollment_format: '{{ enrollment_format }}'
-    p12_protection_password: 'Entrust@2018'
-    dn: '{{ dn }}'
-    cagw_api_specification_path: '{{ cagw_api_specification_path }}'
-    connection_type: '{{ connection_type }}'
-    subject_alt_name:
-      uniformResourceIdentifier: '{{ uniformResourceIdentifier }}'
-    remaining_days: '{{ remaining_days }}'
-    force: '{{ force }}'
+    request_type: 'new'
+    enrollment_format: 'X509'
+    dn: 'cn=device'
+    cagw_api_specification_path: '/tmp/cagw-api.yaml'
+    connection_type: 'SM'
+    remaining_days: '30'
+    force: 'true'
   delegate_to: 127.0.0.1
 
 - name: convert cert to DER encoding
   ansible.builtin.shell:
-    cmd: openssl x509 -in {{ cert_path }} -outform DER -out /tmp/epa.crt
+    cmd: openssl x509 -in birth_cer.crt -outform DER -out /tmp/birth.crt
   delegate_to: 127.0.0.1
 
 - name: convert private key to DER encoding
   ansible.builtin.shell:
-    cmd: openssl pkcs8 -topk8 -inform PEM -outform DER -in {{ working_path }}/fi                                                                             les/key.pem -out /tmp/epa_private.p8 -nocrypt
+    cmd: openssl pkcs8 -topk8 -inform PEM -outform DER -in {{ working_path }}/files/key.pem -out /tmp/epa_private.p8 -nocrypt
   delegate_to: 127.0.0.1
 
 - name: Create entrust user
