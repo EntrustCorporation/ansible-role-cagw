@@ -1,0 +1,139 @@
+- name: Create CSR using shell command
+  shell: openssl req -nodes -newkey rsa:2048 -keyout {{ privatekey_path }} -out                                                                              {{ csr_path }} -subj {{ dn }}
+  delegate_to: 127.0.0.1
+
+- name: Request a certificate from CAGW
+  community.crypto.cagw_certificate:
+    path: '{{ cert_path }}'
+    csr: '{{ csr_path }}'
+    cagw_api_client_cert_path: '{{ cagw_api_client_cert_path }}'
+    cagw_api_client_cert_key_path: '{{ cagw_api_client_cert_key_path }}'
+    certificate_authority_id: '{{ ca_id }}'
+    certificate_profile_id: '{{ profile_id }}'
+    request_type: '{{ request_type }}'
+    enrollment_format: '{{ enrollment_format }}'
+    p12_protection_password: 'Entrust@2018'
+    dn: '{{ dn }}'
+    cagw_api_specification_path: '{{ cagw_api_specification_path }}'
+    connection_type: '{{ connection_type }}'
+    subject_alt_name:
+      uniformResourceIdentifier: '{{ uniformResourceIdentifier }}'
+    remaining_days: '{{ remaining_days }}'
+    force: '{{ force }}'
+  delegate_to: 127.0.0.1
+
+- name: convert cert to DER encoding
+  ansible.builtin.shell:
+    cmd: openssl x509 -in {{ cert_path }} -outform DER -out /tmp/epa.crt
+  delegate_to: 127.0.0.1
+
+- name: convert private key to DER encoding
+  ansible.builtin.shell:
+    cmd: openssl pkcs8 -topk8 -inform PEM -outform DER -in {{ working_path }}/fi                                                                             les/key.pem -out /tmp/epa_private.p8 -nocrypt
+  delegate_to: 127.0.0.1
+
+- name: Create entrust user
+  ansible.builtin.shell:
+    cmd: useradd -ms /bin/bash entrust
+  become: true
+
+  #- name: Create entrust user
+  #ansible.builtin.shell:
+  #cmd: chmod -R 700 /opt/entrust
+  #become: true
+
+- name: create cert directory in /opt/entrust
+  ansible.builtin.shell:
+    cmd: mkdir -p /opt/entrust/cert/
+  become: true
+
+- name: create CA Certificates directory in /opt/entrust/cert/
+  ansible.builtin.shell:
+    cmd: mkdir -p /opt/entrust/cert/CACertificates
+  become: true
+
+- name: copy birth certificate to target
+  copy:
+    src: /tmp/sjas8.crt
+    dest: /opt/entrust/cert/sjas8.crt
+  become: true
+
+- name: copy private key to target
+  copy:
+    src: /tmp/sjas8_private.p8
+    dest: /opt/entrust/cert/sjas8_private.p8
+  become: true
+
+- name: copy CA certificate to target
+  copy:
+    src: /tmp/ca.crt
+    dest: /opt/entrust/cert/CACertificates/ca.crt
+  become: true
+
+- name: copy IOT Agent tar file to target
+  copy:
+    src: /tmp/IoTAgent.x86_64-buildroot-linux-musl.tar
+    dest: /tmp/IoTAgent.x86_64-buildroot-linux-musl.tar
+
+- name: expand IoT Agent tar file on target machine
+  ansible.builtin.shell:
+    cmd: tar -xf IoTAgent.x86_64-buildroot-linux-musl.tar
+    chdir: /tmp/
+
+    #- name: create CA Certificates directory in /opt/entrust/cert/
+    #ansible.builtin.shell:
+    #cmd: mkdir -p /opt/entrust/IOT_AGENT
+    #become: true
+
+- name: copy IOT Agent to /opt/entrust
+  ansible.builtin.shell:
+    cmd: cp -r ./IOT_AGENT /opt/entrust/
+    chdir: /tmp/
+  become: true
+
+- name: copy run IOT agent shell file to target machine
+  copy:
+    src: /tmp/runIoTAgent.sh
+    dest: /opt/entrust/IOT_AGENT/runIoTAgent.sh
+  become: true
+
+- name: Create entrust user
+  ansible.builtin.shell:
+    cmd: sed -i 's/export container=false/export container=true/' /opt/entrust/I                                                                             OT_AGENT/Modules
+  become: true
+
+- name: Create entrust user
+  ansible.builtin.shell:
+    cmd: chmod 700 /opt/entrust/IOT_AGENT/runIoTAgent.sh
+  become: true
+
+- name: Create entrust user
+  ansible.builtin.shell:
+    cmd: chmod 700 /opt/entrust/IOT_AGENT/Resources/ntpEPA.sh
+  become: true
+
+- name: Create entrust user
+  ansible.builtin.shell:
+    cmd: sed -i "1s/.*/exit 0/" /opt/entrust/IOT_AGENT/Resources/ntpEPA.sh
+  become: true
+
+- name: Create entrust user
+  ansible.builtin.shell:
+    cmd: sed -i "1s/.*/exit 0/" /opt/entrust/IOT_AGENT/Process_restarter
+  become: true
+
+- name: create CA Certificates directory in /opt/entrust/cert/
+  ansible.builtin.shell:
+    cmd: mkdir -p /opt/entrust/IOT_AGENT/induslog/
+  become: true
+
+- name: Create entrust user
+  ansible.builtin.shell:
+    cmd: chmod -R 700 /opt/entrust
+  become: true
+
+- name: run IOT Agent configuration script on target machine with provided varia                                                                             bles
+  ansible.builtin.shell:
+    cmd: sh /opt/entrust/IOT_AGENT/runIoTAgent.sh 10.1.167.42 8030 ITA RSA-2048
+    chdir: /tmp/IOT_AGENT/
+  become: true
